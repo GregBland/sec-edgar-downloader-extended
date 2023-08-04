@@ -261,12 +261,14 @@ def download_and_save_filing(
         filing_text = resolve_relative_urls_in_filing(filing_text, download_url)
 
     # Create all parent directories as needed and write content to file
+    # save_path adjusted to not include all the subdirectories in this custom extension as this is what we want for
+    # now in our app.
+
+    # Change the filename from default name to reflect the specific form downloader but not nested in directory
+    # hierarchy- information is held in flat structure in file name instead.
+    save_filename = ticker_or_cik + '_' + filing_type + '_' + accession_number + ".html"
     save_path = (
         download_folder
-        / ROOT_SAVE_FOLDER_NAME
-        / ticker_or_cik
-        / filing_type
-        / accession_number
         / save_filename
     )
     save_path.parent.mkdir(parents=True, exist_ok=True)
@@ -289,7 +291,9 @@ def download_filings(
     try:
         for filing in filings_to_fetch:
             try:
-                download_and_save_filing(
+                pass
+                # Pass this code as we only want to download the filing_details in this custom extension
+                """download_and_save_filing(
                     client,
                     download_folder,
                     ticker_or_cik,
@@ -297,7 +301,7 @@ def download_filings(
                     filing_type,
                     filing.full_submission_url,
                     FILING_FULL_SUBMISSION_FILENAME,
-                )
+                )"""
             except requests.exceptions.HTTPError as e:  # pragma: no cover
                 print(
                     "Skipping full submission download for "
